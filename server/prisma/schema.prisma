@@ -1,0 +1,232 @@
+// server/prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// --- User and Role Management ---
+model Role {
+  role_id     Int         @id @default(autoincrement())
+  role_name   String      @unique @db.VarChar(50)
+  description String?     @db.Text
+  UserRole    UserRole[]
+  permissions Permission[] @relation("RolePermissions")
+}
+
+model Permission {
+  permission_id   Int        @id @default(autoincrement())
+  permission_name String     @unique @db.VarChar(100)
+  description     String?    @db.Text
+  roles           Role[]     @relation("RolePermissions")
+}
+
+model User {
+  user_id         String        @id @default(uuid()) @db.Uuid
+  username        String        @unique @db.VarChar(100)
+  email           String        @unique @db.VarChar(255)
+  password_hash   String        @db.VarChar(255)
+  full_name       String?       @db.VarChar(255)
+  date_of_birth   DateTime?     @db.Date
+  phone_number    String?       @db.VarChar(20)
+  address         String?       @db.VarChar(255)
+  profile_picture String?       @db.VarChar(255)
+  is_active       Boolean       @default(true)
+  created_at      DateTime      @default(now())
+  updated_at      DateTime      @updatedAt
+
+  UserRole        UserRole[]
+  Student         Student?
+  Instructor      Instructor?
+  Admin           Admin?
+}
+
+model UserRole {
+  user_id     String @db.Uuid
+  role_id     Int
+  assigned_at DateTime @default(now())
+
+  user User @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  role Role @relation(fields: [role_id], references: [role_id], onDelete: Cascade)
+
+  @@id([user_id, role_id])
+}
+
+// --- Student Model ---
+model Major {
+  major_id      Int       @id @default(autoincrement())
+  major_name    String    @unique @db.VarChar(100)
+  description   String?   @db.Text
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
+  students      Student[] // Thêm trường này: Một Major có nhiều Student
+}
+
+model Student {
+  student_id         String    @id @db.Uuid // Liên kết với user_id
+  student_code       String    @unique @db.VarChar(20)
+  major_id           Int
+  admission_year     Int
+  current_gpa        Decimal?  @db.Decimal(3, 2)
+  total_credits_earned Int?     @default(0)
+  status             String    @default("Active") @db.VarChar(50) // e.g., Active, On Leave, Graduated
+  created_at         DateTime  @default(now())
+  updated_at         DateTime  @updatedAt
+
+  user               User    @relation(fields: [student_id], references: [user_id], onDelete: Cascade)
+  major              Major   @relation(fields: [major_id], references: [major_id])
+  enrollments        Enrollment[] // Thêm trường này: Một Student có nhiều Enrollments
+  submissions        Submission[] // Thêm trường này: Một Student có nhiều Submissions
+}
+
+// --- Instructor Model ---
+model Department {
+  department_id Int          @id @default(autoincrement())
+  dept_name     String       @unique @db.VarChar(100)
+  description   String?      @db.Text
+  created_at    DateTime     @default(now())
+  updated_at    DateTime     @updatedAt
+  instructors   Instructor[] // Thêm trường này: Một Department có nhiều Instructor
+  courses       Course[]     // Thêm trường này: Một Department có nhiều Course
+}
+
+model Instructor {
+  instructor_id String   @id @db.Uuid // Liên kết với user_id
+  department_id Int
+  academic_rank String?  @db.VarChar(100) // e.g., Lecturer, Assistant Professor, Professor
+  office_location String? @db.VarChar(255)
+  phone_number    String? @db.VarChar(20)
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  user          User     @relation(fields: [instructor_id], references: [user_id], onDelete: Cascade)
+  department    Department @relation(fields: [department_id], references: [department_id])
+  sections      Section[]  // Thêm trường này: Một Instructor có nhiều Sections
+  grades        Grade[]    @relation("InstructorGrades") // Thêm trường này: Một Instructor có thể chấm nhiều Grade
+}
+
+// --- Admin Model ---
+model Admin {
+  admin_id String @id @db.Uuid // Liên kết với user_id
+  user     User   @relation(fields: [admin_id], references: [user_id], onDelete: Cascade)
+}
+
+// --- Course Management ---
+model Course {
+  course_id         String             @id @default(uuid()) @db.Uuid
+  course_code       String             @unique @db.VarChar(20)
+  course_name       String             @db.VarChar(255)
+  description       String?            @db.Text
+  credits           Int
+  department_id     Int
+  created_at        DateTime           @default(now())
+  updated_at        DateTime           @updatedAt
+  department        Department         @relation(fields: [department_id], references: [department_id])
+  sections          Section[] // Một Course có nhiều Sections
+}
+
+model Section {
+  section_id        String          @id @default(uuid()) @db.Uuid
+  course_id         String          @db.Uuid
+  instructor_id     String          @db.Uuid
+  section_code      String          @unique @db.VarChar(20)
+  academic_year     Int
+  semester          String          @db.VarChar(50) // e.g., Fall, Spring, Summer
+  start_date        DateTime        @db.Date
+  end_date          DateTime        @db.Date
+  capacity          Int
+  created_at        DateTime        @default(now())
+  updated_at        DateTime        @updatedAt
+  course            Course          @relation(fields: [course_id], references: [course_id])
+  instructor        Instructor      @relation(fields: [instructor_id], references: [instructor_id])
+  enrollments       Enrollment[]    // Một Section có nhiều Enrollments
+  assignments       Assignment[]    // Một Section có nhiều Assignments
+  grades            Grade[]         // Thêm trường này: Một Section có nhiều Grades
+  lectures          Lecture[]       // Một Section có nhiều Lectures
+}
+
+model Enrollment {
+  enrollment_id     String    @id @default(uuid()) @db.Uuid
+  student_id        String    @db.Uuid
+  section_id        String    @db.Uuid
+  enrollment_date   DateTime  @default(now())
+  status            String    @default("Enrolled") @db.VarChar(50) // e.g., Enrolled, Dropped, Completed
+  created_at        DateTime  @default(now())
+  updated_at        DateTime  @updatedAt
+
+  student           Student   @relation(fields: [student_id], references: [student_id])
+  section           Section   @relation(fields: [section_id], references: [section_id])
+  grades            Grade[]   // Thêm trường này: Một Enrollment có nhiều Grades
+
+  @@unique([student_id, section_id]) // Một sinh viên chỉ có thể đăng ký một section một lần
+}
+
+model Assignment {
+  assignment_id   String    @id @default(uuid()) @db.Uuid
+  section_id      String    @db.Uuid
+  title           String    @db.VarChar(255)
+  description     String?   @db.Text
+  due_date        DateTime  @db.Timestamp(3)
+  max_score       Int
+  assignment_type String    @db.VarChar(50) // e.g., Homework, Quiz, Project, Exam
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @updatedAt
+
+  section         Section   @relation(fields: [section_id], references: [section_id])
+  submissions     Submission[] // Một Assignment có nhiều Submissions
+  grades          Grade[]      // Thêm trường này: Một Assignment có thể có nhiều Grades
+}
+
+model Submission {
+  submission_id String    @id @default(uuid()) @db.Uuid
+  assignment_id String    @db.Uuid
+  student_id    String    @db.Uuid
+  submission_date DateTime  @default(now())
+  file_url      String?   @db.VarChar(255)
+  text_content  String?   @db.Text
+  score         Decimal?  @db.Decimal(5, 2) // Max score could be 999.99
+  feedback      String?   @db.Text
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
+
+  assignment    Assignment @relation(fields: [assignment_id], references: [assignment_id])
+  student       Student    @relation(fields: [student_id], references: [student_id])
+
+  @@unique([assignment_id, student_id]) // Mỗi sinh viên chỉ nộp một bài cho mỗi assignment
+}
+
+model Grade {
+  grade_id      String     @id @default(uuid()) @db.Uuid
+  enrollment_id String     @db.Uuid
+  assignment_id String?    @db.Uuid // Có thể null nếu là điểm tổng kết môn, hoặc nếu không liên kết trực tiếp
+  score         Decimal    @db.Decimal(5, 2)
+  graded_by     String     @db.Uuid // instructor_id
+  grade_date    DateTime   @default(now())
+  feedback      String?    @db.Text
+  created_at    DateTime   @default(now())
+  updated_at    DateTime   @updatedAt
+
+  enrollment    Enrollment @relation(fields: [enrollment_id], references: [enrollment_id])
+  assignment    Assignment? @relation(fields: [assignment_id], references: [assignment_id], onDelete: SetNull) // `Assignment` có thể null
+  grader        Instructor @relation("InstructorGrades", fields: [graded_by], references: [instructor_id]) // Đặt tên quan hệ để phân biệt
+  section       Section    @relation(fields: [section_id], references: [section_id]) // Thêm trường này
+  section_id    String     @db.Uuid // Thêm trường này
+
+  @@unique([enrollment_id, assignment_id]) // Mỗi sinh viên chỉ có một điểm cho mỗi assignment trong một enrollment
+}
+
+model Lecture {
+  lecture_id    String    @id @default(uuid()) @db.Uuid
+  section_id    String    @db.Uuid
+  title         String    @db.VarChar(255)
+  description   String?   @db.Text
+  lecture_date  DateTime  @db.Timestamp(3)
+  file_url      String?   @db.VarChar(255) // URL của tài liệu bài giảng
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
+
+  section       Section   @relation(fields: [section_id], references: [section_id])
+}

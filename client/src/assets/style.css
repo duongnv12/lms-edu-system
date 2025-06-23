@@ -1,0 +1,54 @@
+/* client/src/assets/main.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global styles */
+html, body, #app {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  /* Đặt màu nền tổng thể cho ứng dụng ở đây */
+  background-color: #f8fafc; /* Một màu xám rất nhạt (bg-gray-50) */
+  /* Hoặc một gradient rất nhẹ nếu muốn */
+  /* background: linear-gradient(to bottom right, #f0f4f8, #e2e8f0); */
+  font-family: 'Inter', sans-serif; /* Sử dụng font hiện đại hơn */
+}
+
+/* Base styles for scrollbars (optional, for a cleaner look) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Other general styles for your app */
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
