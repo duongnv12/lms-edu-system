@@ -122,10 +122,37 @@ model Course {
   description       String?            @db.Text
   credits           Int
   department_id     Int
+  course_type       String?            @db.VarChar(50) // Loại môn: cơ sở ngành, chuyên ngành, tự chọn...
+  semester_applicable String?          @db.VarChar(20) // Học kỳ áp dụng
   created_at        DateTime           @default(now())
   updated_at        DateTime           @updatedAt
   department        Department         @relation(fields: [department_id], references: [department_id])
+
+  prerequisites     CoursePrerequisite[] @relation("CoursePrerequisite_course")
+  isPrerequisiteOf  CoursePrerequisite[] @relation("CoursePrerequisite_prerequisite")
+  priors            CoursePrior[]        @relation("CoursePrior_course")
+  isPriorOf         CoursePrior[]        @relation("CoursePrior_prior")
   sections          Section[] // Một Course có nhiều Sections
+}
+
+model CoursePrerequisite {
+  course_id        String   @db.Uuid
+  prerequisite_id  String   @db.Uuid
+
+  course          Course @relation("CoursePrerequisite_course", fields: [course_id], references: [course_id])
+  prerequisite    Course @relation("CoursePrerequisite_prerequisite", fields: [prerequisite_id], references: [course_id])
+
+  @@id([course_id, prerequisite_id])
+}
+
+model CoursePrior {
+  course_id   String   @db.Uuid
+  prior_id    String   @db.Uuid
+
+  course      Course @relation("CoursePrior_course", fields: [course_id], references: [course_id])
+  prior       Course @relation("CoursePrior_prior", fields: [prior_id], references: [course_id])
+
+  @@id([course_id, prior_id])
 }
 
 model Section {
@@ -207,7 +234,7 @@ model Grade {
   grade_date    DateTime   @default(now())
   feedback      String?    @db.Text
   created_at    DateTime   @default(now())
-  updated_at    DateTime   @updatedAt
+  updated_at    DateTime   @default(now())
 
   enrollment    Enrollment @relation(fields: [enrollment_id], references: [enrollment_id])
   assignment    Assignment? @relation(fields: [assignment_id], references: [assignment_id], onDelete: SetNull) // `Assignment` có thể null

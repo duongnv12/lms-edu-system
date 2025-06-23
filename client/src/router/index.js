@@ -47,6 +47,24 @@ const router = createRouter({
             name: 'privacy',
             component: () => import('@/views/Privacy.vue')
         },
+        {
+            path: '/courses',
+            name: 'courses',
+            component: () => import('@/views/CourseList.vue'),
+            meta: { requiresAuth: true } // Đánh dấu route này cần xác thực
+        },
+        {
+            path: '/departments',
+            name: 'DepartmentList',
+            component: () => import('../views/DepartmentList.vue'),
+            meta: { requiresAuth: true },
+        },
+        {
+            path: '/admin',
+            name: 'admin',
+            component: () => import('@/views/Admin.vue'),
+            meta: { requiresAuth: true }
+        },
     ]
 })
 

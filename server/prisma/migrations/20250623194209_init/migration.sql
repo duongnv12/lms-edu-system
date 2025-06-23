@@ -108,10 +108,28 @@ CREATE TABLE "Course" (
     "description" TEXT,
     "credits" INTEGER NOT NULL,
     "department_id" INTEGER NOT NULL,
+    "course_type" VARCHAR(50),
+    "semester_applicable" VARCHAR(20),
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Course_pkey" PRIMARY KEY ("course_id")
+);
+
+-- CreateTable
+CREATE TABLE "CoursePrerequisite" (
+    "course_id" UUID NOT NULL,
+    "prerequisite_id" UUID NOT NULL,
+
+    CONSTRAINT "CoursePrerequisite_pkey" PRIMARY KEY ("course_id","prerequisite_id")
+);
+
+-- CreateTable
+CREATE TABLE "CoursePrior" (
+    "course_id" UUID NOT NULL,
+    "prior_id" UUID NOT NULL,
+
+    CONSTRAINT "CoursePrior_pkey" PRIMARY KEY ("course_id","prior_id")
 );
 
 -- CreateTable
@@ -185,7 +203,7 @@ CREATE TABLE "Grade" (
     "grade_date" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "feedback" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL,
+    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "section_id" UUID NOT NULL,
 
     CONSTRAINT "Grade_pkey" PRIMARY KEY ("grade_id")
@@ -275,6 +293,18 @@ ALTER TABLE "Admin" ADD CONSTRAINT "Admin_admin_id_fkey" FOREIGN KEY ("admin_id"
 
 -- AddForeignKey
 ALTER TABLE "Course" ADD CONSTRAINT "Course_department_id_fkey" FOREIGN KEY ("department_id") REFERENCES "Department"("department_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "CoursePrerequisite" ADD CONSTRAINT "CoursePrerequisite_course_id_fkey" FOREIGN KEY ("course_id") REFERENCES "Course"("course_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "CoursePrerequisite" ADD CONSTRAINT "CoursePrerequisite_prerequisite_id_fkey" FOREIGN KEY ("prerequisite_id") REFERENCES "Course"("course_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "CoursePrior" ADD CONSTRAINT "CoursePrior_course_id_fkey" FOREIGN KEY ("course_id") REFERENCES "Course"("course_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "CoursePrior" ADD CONSTRAINT "CoursePrior_prior_id_fkey" FOREIGN KEY ("prior_id") REFERENCES "Course"("course_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Section" ADD CONSTRAINT "Section_course_id_fkey" FOREIGN KEY ("course_id") REFERENCES "Course"("course_id") ON DELETE RESTRICT ON UPDATE CASCADE;

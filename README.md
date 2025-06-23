@@ -1,105 +1,94 @@
-# Phần mềm Quản lý Chương trình Đào tạo và Theo dõi Tiến độ Sinh viên
+# Phần mềm Quản lý Chương trình Đào tạo & Theo dõi Tiến độ Sinh viên
 
-## Giới thiệu chung
+## Giới thiệu
 
-Phần mềm Quản lý Chương trình Đào tạo và Theo dõi Tiến độ Sinh viên là một giải pháp toàn diện được phát triển để tối ưu hóa quy trình quản lý học thuật tại các trường học và trung tâm đào tạo. Hệ thống này giúp tự động hóa các tác vụ quản lý thủ công, giảm thiểu sai sót, và cung cấp một cái nhìn tổng quan minh bạch, hiệu quả về toàn bộ quá trình học tập của sinh viên.
+Hệ thống giúp tự động hóa quản lý chương trình đào tạo và theo dõi tiến độ học tập của sinh viên tại các trường học, trung tâm đào tạo. Phần mềm giảm thiểu thao tác thủ công, hạn chế sai sót và cung cấp cái nhìn tổng quan, trực quan về quá trình học tập.
 
-Với mục tiêu nâng cao chất lượng giáo dục và hỗ trợ tối đa cho sinh viên, giảng viên, cùng cán bộ quản lý, phần mềm cung cấp các công cụ mạnh mẽ để định nghĩa, tổ chức chương trình đào tạo và theo dõi chặt chẽ hành trình học tập của từng cá nhân.
+---
 
-## Các Module Chính
+## Tính năng nổi bật
 
-Hệ thống được xây dựng dựa trên các module cốt lõi sau:
+### 1. Quản lý Chương trình Đào tạo (Course & Curriculum Management)
+- **Khóa học/Môn học:** Thêm, sửa, xóa, phân loại, tải lên đề cương chi tiết, quản lý môn học tiên quyết.
+- **Chương trình đào tạo:** Định nghĩa cấu trúc chương trình, gán môn học, thiết lập điều kiện hoàn thành, quản lý phiên bản chương trình.
+- **Giảng viên:** Lưu trữ thông tin, phân công giảng dạy.
 
-### 1. Module Quản lý Chương trình Đào tạo (Course & Curriculum Management)
+### 2. Theo dõi Tiến độ Sinh viên (Student Progress Tracking)
+- **Hồ sơ sinh viên:** Quản lý thông tin cá nhân, lịch sử học tập, điểm số.
+- **Lộ trình học tập:** Trực quan hóa tiến độ, tính toán tín chỉ, kiểm tra điều kiện hoàn thành, dự đoán thời gian tốt nghiệp.
+- **Báo cáo & Thông báo:** Tổng hợp điểm số, gửi cảnh báo, nhắc nhở tự động.
 
-Module này là nền tảng của hệ thống, nơi tất cả các thông tin liên quan đến chương trình đào tạo được định nghĩa và quản lý một cách có hệ thống.
+### 3. Module phụ trợ & mở rộng
+- **Quản lý người dùng & phân quyền:** Phân vai trò (quản trị viên, cán bộ, giảng viên, sinh viên).
+- **Báo cáo & thống kê:** Đa dạng báo cáo về đào tạo, tiến độ, tỷ lệ tốt nghiệp.
+- **Tích hợp hệ thống ngoài:** Kết nối SMS, LMS, hệ thống quản lý sinh viên.
+- **Giao diện hiện đại:** UI/UX thân thiện, tối ưu cho cả sinh viên và cán bộ.
 
-* **Quản lý Khóa học/Môn học:**
-    * **Thêm/Sửa/Xóa:** Dễ dàng quản lý thông tin chi tiết về từng môn học (mã, tên, số tín chỉ, mô tả, môn tiên quyết).
-    * **Phân loại:** Phân loại môn học theo ngành, khối kiến thức, học kỳ áp dụng.
-    * **Đề cương Chi tiết:** Tải lên hoặc liên kết đề cương chi tiết, bao gồm mục tiêu, nội dung, phương pháp đánh giá, tài liệu tham khảo.
-* **Quản lý Chương trình Đào tạo (Curriculum Management):**
-    * **Định nghĩa Chương trình:** Xây dựng cấu trúc cho từng chương trình đào tạo (ví dụ: Cử nhân Công nghệ thông tin).
-    * **Gán Môn học:** Gắn kết các môn học vào chương trình đào tạo, sắp xếp theo học kỳ đề xuất.
-    * **Điều kiện Hoàn thành:** Thiết lập các quy tắc và điều kiện để hoàn thành chương trình.
-    * **Phiên bản Chương trình:** Lưu trữ và quản lý các phiên bản khác nhau của chương trình đào tạo qua các năm.
-* **Quản lý Giảng viên:**
-    * **Thông tin:** Lưu trữ thông tin chi tiết của giảng viên (chuyên môn, liên hệ).
-    * **Phân công giảng dạy:** Gán giảng viên vào các môn học cụ thể.
+---
 
-### 2. Module Theo dõi Tiến độ Hoàn thành Chương trình Đào tạo của Sinh viên (Student Progress Tracking)
+## Công nghệ sử dụng
 
-Module này cung cấp công cụ mạnh mẽ để sinh viên và cán bộ quản lý có cái nhìn rõ ràng và minh bạch về quá trình học tập của từng cá nhân.
+- **Frontend:** Vue.js, Vite, Tailwind CSS
+- **Backend:** Node.js, Express.js, Prisma ORM
+- **Database:** PostgreSQL (hoặc MongoDB tùy cấu hình)
 
-* **Hồ sơ Sinh viên:**
-    * **Thông tin cá nhân:** Lưu trữ đầy đủ thông tin sinh viên (mã số, tên, thông tin liên hệ, ngành học).
-    * **Lịch sử Học tập:** Tích hợp hoặc nhập dữ liệu điểm số các môn học đã hoàn thành.
-* **Theo dõi Tiến độ Học tập:**
-    * **Lộ trình Học tập:** Trực quan hóa chương trình đào tạo, đánh dấu môn đã hoàn thành và môn còn lại.
-    * **Tính toán Tín chỉ:** Tự động tính toán tổng số tín chỉ đã tích lũy.
-    * **Kiểm tra Điều kiện:** So sánh tiến độ với điều kiện hoàn thành, cảnh báo nếu sinh viên chậm tiến độ hoặc thiếu tín chỉ.
-    * **Báo cáo Điểm số:** Tổng hợp và hiển thị bảng điểm chi tiết theo học kỳ hoặc toàn bộ quá trình.
-* **Chức năng cho Sinh viên:** Xem lộ trình, kiểm tra môn học, xem điểm số, đăng ký môn học (tùy chọn), nhận thông báo.
-* **Chức năng cho Cán bộ Quản lý/Giảng viên:** Xem tổng quan tiến độ, xem hồ sơ chi tiết sinh viên, nhập/cập nhật điểm, tạo báo cáo, gửi thông báo.
+---
 
-## Các Module Phụ trợ và Tính năng Mở rộng
-
-* **Quản lý Người dùng và Phân quyền:** Đảm bảo quyền truy cập phù hợp cho từng vai trò (Admin, Cán bộ đào tạo, Giảng viên, Sinh viên).
-* **Module Báo cáo và Thống kê:** Tạo các báo cáo đa dạng về tình hình đào tạo, tiến độ, tỷ lệ tốt nghiệp.
-* **Hệ thống Thông báo:** Gửi thông báo tự động (cảnh báo môn học, nhắc nhở).
-* **Tích hợp:** Khả năng tích hợp với các hệ thống hiện có (SMS, LMS khác).
-* **Giao diện Người dùng (UI) và Trải nghiệm Người dùng (UX):** Thiết kế giao diện thân thiện, dễ sử dụng.
-
-## Công nghệ sử dụng (Ví dụ)
-
-* **Frontend:** Vue.js (hoặc React/Angular)
-* **Styling:** Tailwind CSS
-* **Backend:** Node.js (Express.js) / Spring Boot / .NET Core / Python (Django/Flask)
-* **Database:** MongoDB / PostgreSQL / MySQL
-
-## Cài đặt và Chạy dự án (Ví dụ)
+## Cài đặt & triển khai
 
 ### Yêu cầu
+- Node.js >= 18.x
+- npm hoặc yarn
+- PostgreSQL (hoặc cấu hình database phù hợp)
 
-* Node.js (phiên bản X.X.X trở lên)
-* npm hoặc yarn
-* (Nếu có backend riêng) Docker, Java/Python runtime, v.v.
+### 1. Clone repository
+```bash
+git clone <URL_repository_cua_ban>
+cd lms-edu-system
+```
 
-### Hướng dẫn
+### 2. Cài đặt dependencies
+```bash
+# Frontend
+cd client
+npm install
 
-1.  **Clone repository:**
-    ```bash
-    git clone <URL_repository_của_bạn>
-    cd <tên_thư_mục_dự_án>
-    ```
-2.  **Cài đặt dependencies:**
-    ```bash
-    # Đối với frontend
-    cd frontend-folder
-    npm install # hoặc yarn install
+# Backend
+cd ../server
+npm install
+```
 
-    # Đối với backend (nếu có)
-    cd ../backend-folder
-    npm install # hoặc pip install -r requirements.txt / mvn install
-    ```
-3.  **Cấu hình biến môi trường:**
-    Tạo file `.env` trong thư mục `frontend-folder` (và `backend-folder` nếu có) và cấu hình các biến cần thiết (ví dụ: `VITE_API_URL` cho frontend, `PORT`, `DATABASE_URL` cho backend).
-4.  **Chạy dự án:**
-    ```bash
-    # Chạy frontend
-    cd frontend-folder
-    npm run dev # hoặc yarn dev
+### 3. Cấu hình biến môi trường
+- **Frontend:** Tạo file `.env` trong `client/` với biến `VITE_API_URL` trỏ tới backend.
+- **Backend:** Tạo file `.env` trong `server/` với các biến như `PORT`, `DATABASE_URL`, `JWT_SECRET`, v.v.
 
-    # Chạy backend (nếu có)
-    cd ../backend-folder
-    npm start # hoặc npm run dev / python manage.py runserver
-    ```
-    Ứng dụng frontend thường sẽ chạy trên `http://localhost:5173` (hoặc cổng khác), và backend trên `http://localhost:3000` (hoặc cổng khác).
+### 4. Khởi tạo database (Prisma)
+```bash
+cd server
+npx prisma migrate deploy
+npx prisma db seed # (nếu có file seed)
+```
 
-## Đóng góp
+### 5. Chạy dự án
+```bash
+# Chạy backend
+cd server
+npm start
+# hoặc npm run dev
 
-Chúng tôi hoan nghênh mọi sự đóng góp để cải thiện hệ thống. Vui lòng tham khảo `CONTRIBUTING.md` (nếu có) để biết thêm chi tiết.
+# Chạy frontend (mở tab mới)
+cd client
+npm run dev
+```
+- Frontend: http://localhost:5173
+- Backend: http://localhost:3000
+
+---
+
+## Đóng góp & phát triển
+
+Chào mừng mọi đóng góp để cải thiện hệ thống! Vui lòng tham khảo `CONTRIBUTING.md` (nếu có).
 
 ## Giấy phép
 
-Dự án này được cấp phép theo Giấy phép MIT (hoặc một giấy phép khác mà bạn chọn). Xem file `LICENSE` để biết thêm chi tiết.
+Dự án được cấp phép theo MIT License. Xem file `LICENSE` để biết thêm chi tiết.

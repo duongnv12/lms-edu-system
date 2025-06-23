@@ -11,7 +11,6 @@ const googleClient = require('../config/googleAuth');
  * @returns {string} The generated JWT.
  */
 const generateAuthToken = (user) => {
-    console.log(`[AUTH_SERVICE] Generating JWT for user ID: ${user.user_id}`);
     // Ensure user.UserRole is an array and each item has a role.role_name
     const roles = Array.isArray(user.UserRole) ? user.UserRole.map(r => r.role.role_name) : [];
     const token = jwt.sign(
@@ -29,22 +28,18 @@ const generateAuthToken = (user) => {
  * @throws {Error} If the token is invalid or its issuer is not Google.
  */
 const verifyGoogleToken = async (idToken) => {
-    console.log("[AUTH_SERVICE] Verifying Google ID token...");
     try {
         const ticket = await googleClient.verifyIdToken({
             idToken: idToken,
             audience: process.env.GOOGLE_CLIENT_ID,
         });
         const payload = ticket.getPayload();
-        console.log(`[AUTH_SERVICE] Google ID token verified. Email: ${payload.email}`);
         const issuer = payload['iss'];
         if (issuer !== 'accounts.google.com' && issuer !== 'https://accounts.google.com') {
-            console.error(`[AUTH_SERVICE_ERROR] Invalid token issuer: ${issuer}`);
             throw new Error('Invalid token issuer.');
         }
         return payload;
     } catch (error) {
-        console.error("[AUTH_SERVICE_ERROR] Error verifying Google ID token:", error.message);
         throw new Error("Invalid Google ID token.");
     }
 };
@@ -59,19 +54,15 @@ const verifyGoogleToken = async (idToken) => {
  */
 const findOrCreateUserFromGoogle = async (googlePayload) => {
     const { email, name, sub } = googlePayload; // 'sub' is Google User ID, unique to each Google user
-    console.log(`[AUTH_SERVICE] Attempting to find or create user for email: ${email}`);
     let user = null;
     let created = false;
 
     let expectedRoleName;
     if (email.endsWith('@st.phenikaa-uni.edu.vn')) {
         expectedRoleName = 'Student';
-        console.log(`[AUTH_SERVICE] Detected student email domain: ${email}`);
     } else if (email.endsWith('@phenikaa-uni.edu.vn')) {
         expectedRoleName = 'Instructor'; // Instructors and Admins share this domain, role will be Instructor by default
-        console.log(`[AUTH_SERVICE] Detected instructor/admin email domain: ${email}`);
     } else {
-        console.error(`[AUTH_SERVICE_ERROR] Email domain not allowed: ${email}`);
         throw new Error('Email domain not allowed. Please use a Phenikaa University email.');
     }
 
@@ -79,11 +70,7 @@ const findOrCreateUserFromGoogle = async (googlePayload) => {
     user = await prisma.user.findUnique({
         where: { email },
         include: {
-            UserRole: {
-                include: {
-                    role: true
-                }
-            },
+            UserRole: { include: { role: true } },
             Student: { include: { major: true } }, // Include Major for Student
             Instructor: { include: { department: true } }, // Include Department for Instructor
             Admin: true // Include Admin if any
@@ -92,16 +79,13 @@ const findOrCreateUserFromGoogle = async (googlePayload) => {
 
     if (!user) {
         // 2. If user not found, create a new user and assign the corresponding role
-        console.log(`[AUTH_SERVICE] User with email ${email} not found. Creating new user.`);
         const role = await prisma.role.findUnique({
             where: { role_name: expectedRoleName },
         });
 
         if (!role) {
-            console.error(`[AUTH_SERVICE_ERROR] Role "${expectedRoleName}" not found in database. Check seeding.`);
             throw new Error(`Role "${expectedRoleName}" not found. Please ensure roles are seeded correctly.`);
         }
-        console.log(`[AUTH_SERVICE] Assigning role: ${role.role_name} (ID: ${role.role_id})`);
 
         // Create new user (DO NOT include roles directly in create data for many-to-many)
         const newUser = await prisma.user.create({
@@ -123,7 +107,6 @@ const findOrCreateUserFromGoogle = async (googlePayload) => {
 
         // Create records in Students or Instructors table
         if (expectedRoleName === 'Student') {
-            console.log(`[AUTH_SERVICE] Creating student record for user ID: ${newUser.user_id}`);
             await prisma.student.create({
                 data: {
                     student_id: newUser.user_id, // student_id is also the user_id in your schema
@@ -132,16 +115,13 @@ const findOrCreateUserFromGoogle = async (googlePayload) => {
                     admission_year: new Date().getFullYear(),
                 },
             });
-            console.log(`[AUTH_SERVICE] Student record created.`);
         } else if (expectedRoleName === 'Instructor') {
-            console.log(`[AUTH_SERVICE] Creating instructor record for user ID: ${newUser.user_id}`);
             await prisma.instructor.create({
                 data: {
                     instructor_id: newUser.user_id, // instructor_id is also the user_id in your schema
                     department_id: 1, // Assume department_id=1 exists as a default
                 },
             });
-            console.log(`[AUTH_SERVICE] Instructor record created.`);
         }
         // No explicit Admin record creation here, as it's assumed to be manual or specific flow
 
@@ -157,15 +137,12 @@ const findOrCreateUserFromGoogle = async (googlePayload) => {
         });
 
         created = true;
-        console.log(`[AUTH_SERVICE] New user created: ${user.user_id} with email ${user.email}`);
 
     } else {
         // 3. If user already exists, check and update role if necessary
-        console.log(`[AUTH_SERVICE] User with email ${email} already exists. Checking roles.`);
         const userRoles = user.UserRole.map(r => r.role.role_name);
 
         if (!userRoles.includes(expectedRoleName)) {
-            console.log(`[AUTH_SERVICE] User ${user.user_id} needs role ${expectedRoleName}.`);
             const roleToAdd = await prisma.role.findUnique({
                 where: { role_name: expectedRoleName },
             });
@@ -186,18 +163,14 @@ const findOrCreateUserFromGoogle = async (googlePayload) => {
                         Admin: true
                     },
                 });
-                console.log(`[AUTH_SERVICE] Role ${expectedRoleName} added to user ${user.user_id}.`);
-            } else {
-                console.warn(`[AUTH_SERVICE_WARN] Role ${expectedRoleName} not found when trying to add to existing user.`);
             }
         }
         // Update full_name if it changed from Google (e.g., user changed their Google profile name)
         if (user.full_name !== name) {
-            console.log(`[AUTH_SERVICE] Updating full name for user ${user.user_id}. Old: ${user.full_name}, New: ${name}`);
             user = await prisma.user.update({
                 where: { user_id: user.user_id },
                 data: { full_name: name },
-                include: { // Include again to ensure the returned user object is complete
+                include: {
                     UserRole: { include: { role: true } },
                     Student: { include: { major: true } },
                     Instructor: { include: { department: true } },
@@ -214,5 +187,5 @@ module.exports = {
     generateAuthToken,
     verifyGoogleToken,
     findOrCreateUserFromGoogle,
-    googleClient, 
+    googleClient,
 };

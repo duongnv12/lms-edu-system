@@ -53,6 +53,12 @@ onUnmounted(() => {
           <li>
             <RouterLink to="/" class="header-nav-link text-base">Trang chủ</RouterLink>
           </li>
+          <li>
+            <RouterLink to="/courses" class="header-nav-link text-base">Học phần</RouterLink>
+          </li>
+          <li>
+            <RouterLink to="/departments" class="header-nav-link text-base">Khoa</RouterLink>
+          </li>
 
           <li v-if="isLoggedIn" class="relative group">
             <button class="flex items-center space-x-2 text-base font-medium text-gray-700 hover:text-blue-600 focus:outline-none py-2 px-3 rounded-lg transition-colors duration-200 group-hover:bg-gray-100">
