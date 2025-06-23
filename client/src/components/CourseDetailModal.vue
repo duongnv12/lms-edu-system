@@ -17,8 +17,8 @@
         </div>
         <div>
           <div class="mb-2"><span class="font-semibold text-blue-700">Khoa:</span> {{ course.department?.dept_name }}</div>
-          <div class="mb-2"><span class="font-semibold text-blue-700">Tiên quyết:</span> {{ course.prerequisite?.course_name || '-' }}</div>
-          <div class="mb-2"><span class="font-semibold text-blue-700">Học trước:</span> {{ course.prior?.course_name || '-' }}</div>
+          <div class="mb-2"><span class="font-semibold text-blue-700">Tiên quyết:</span> {{ prerequisiteNames }}</div>
+          <div class="mb-2"><span class="font-semibold text-blue-700">Học trước:</span> {{ priorNames }}</div>
         </div>
         <div class="md:col-span-2 mt-4">
           <div class="mb-2"><span class="font-semibold text-blue-700">Mô tả:</span> {{ course.description }}</div>
@@ -32,10 +32,26 @@
 </template>
 
 <script setup>
+import { computed } from 'vue';
 import BaseModal from './BaseModal.vue';
 const props = defineProps({
   show: Boolean,
   course: Object
+});
+
+const prerequisiteNames = computed(() => {
+  if (!props.course || !props.course.prerequisites || !props.course.prerequisites.length) return '-';
+  return props.course.prerequisites
+    .map(p => p.prerequisite?.course_name)
+    .filter(Boolean)
+    .join(', ') || '-';
+});
+const priorNames = computed(() => {
+  if (!props.course || !props.course.priors || !props.course.priors.length) return '-';
+  return props.course.priors
+    .map(p => p.prior?.course_name)
+    .filter(Boolean)
+    .join(', ') || '-';
 });
 </script>
 

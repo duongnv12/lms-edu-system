@@ -1,5 +1,6 @@
 <template>
   <div class="w-full">
+    <BaseToast :show="toast.show" :message="toast.message" :type="toast.type" />
     <div class="bg-white rounded-2xl shadow-2xl p-4 sm:p-8 md:p-12 mb-10 max-w-full xl:max-w-[1400px] 2xl:max-w-[1700px] mx-auto">
       <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8 border-b-2 border-blue-100 pb-3 gap-4">
         <div class="flex items-center gap-3">
@@ -23,9 +24,6 @@
         </svg>
       </div>
       <div v-else>
-        <p v-if="toast.show" :class="['bg-' + (toast.type === 'success' ? 'green' : toast.type === 'error' ? 'red' : 'blue') + '-100', 'border', 'border-' + (toast.type === 'success' ? 'green' : toast.type === 'error' ? 'red' : 'blue') + '-400', (toast.type === 'success' ? 'text-green-700' : toast.type === 'error' ? 'text-red-700' : 'text-blue-700'), 'px-4', 'py-3', 'rounded-md', 'mb-6', 'transition-opacity', 'duration-300', 'animate-fade-in']">
-          {{ toast.message }}
-        </p>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
           <div v-for="course in filteredCourses" :key="course.course_id" class="bg-white border border-blue-100 rounded-2xl shadow-md p-5 flex flex-col justify-between hover:shadow-lg transition">
             <div class="flex items-center gap-3 mb-2">
@@ -45,8 +43,8 @@
               <div class="text-xs text-gray-600 truncate" v-if="course.description" :title="course.description">{{ course.description }}</div>
             </div>
             <div class="flex flex-col gap-1 mb-3">
-              <div class="text-xs"><span class="font-semibold text-blue-700">Tiên quyết:</span> <span :title="course.prerequisite?.course_name">{{ course.prerequisite?.course_name || '-' }}</span></div>
-              <div class="text-xs"><span class="font-semibold text-blue-700">Học trước:</span> <span :title="course.prior?.course_name">{{ course.prior?.course_name || '-' }}</span></div>
+              <div class="text-xs"><span class="font-semibold text-blue-700">Tiên quyết:</span> <span :title="getPrerequisiteNames(course)">{{ getPrerequisiteNames(course) }}</span></div>
+              <div class="text-xs"><span class="font-semibold text-blue-700">Học trước:</span> <span :title="getPriorNames(course)">{{ getPriorNames(course) }}</span></div>
             </div>
             <div class="flex items-center gap-2 mt-auto">
               <button @click="goDetail(course.course_id)" class="inline-flex items-center px-2 py-1 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded shadow-sm text-xs font-semibold transition-all">
@@ -72,6 +70,7 @@
           @close="importModal.show = false"
           @file-change="handleFileChange"
           @submit="submitImport"
+          @imported="fetchCourses"
         />
         <CourseDetailModal :show="detailModal.show" :course="detailModal.course" @close="detailModal.show = false" />
         <div v-if="!canEdit" class="text-gray-400 text-sm mt-4">Bạn không có quyền chỉnh sửa học phần.</div>
@@ -90,6 +89,7 @@ import CourseDeleteModal from '../components/CourseDeleteModal.vue';
 import BaseModal from '../components/BaseModal.vue';
 import CourseDetailModal from '../components/CourseDetailModal.vue';
 import CourseImportExcelModal from '../components/CourseImportExcelModal.vue';
+import BaseToast from '../components/BaseToast.vue';
 import * as XLSX from 'xlsx';
 
 const courses = ref([]);
@@ -211,6 +211,21 @@ const onDeletedFromModal = () => {
 function showToast(message, type = 'info') {
   toast.value = { show: true, message, type };
   setTimeout(() => (toast.value.show = false), 3000);
+}
+
+function getPrerequisiteNames(course) {
+  if (!course.prerequisites || !course.prerequisites.length) return '-';
+  return course.prerequisites
+    .map(p => p.prerequisite?.course_name)
+    .filter(Boolean)
+    .join(', ') || '-';
+}
+function getPriorNames(course) {
+  if (!course.priors || !course.priors.length) return '-';
+  return course.priors
+    .map(p => p.prior?.course_name)
+    .filter(Boolean)
+    .join(', ') || '-';
 }
 
 onMounted(fetchCourses);

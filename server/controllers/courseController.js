@@ -83,7 +83,6 @@ exports.createCourse = async (req, res) => {
 exports.updateCourse = async (req, res) => {
     try {
         const data = req.body;
-        console.log('[UPDATE_COURSE] Dữ liệu nhận được:', data);
         const { prerequisite_ids = [], prior_ids = [] } = data;
         // Chỉ lấy các trường hợp lệ cho Prisma
         const updateData = {
@@ -116,7 +115,6 @@ exports.updateCourse = async (req, res) => {
         }
         res.json(course);
     } catch (error) {
-        console.error('[UPDATE_COURSE][ERROR]', error);
         res.status(400).json({ error: error.message });
     }
 };

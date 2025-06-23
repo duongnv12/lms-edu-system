@@ -1,5 +1,5 @@
 <template>
-  <BaseModal :show="show" @close="$emit('close')" title="Thêm học phần mới" customClass="max-w-lg">
+  <BaseModal :show="show" @close="$emit('close')" title="Thêm học phần mới" customClass="max-w-xl rounded-2xl shadow-2xl overflow-y-auto">
     <CourseFormModal :show="show" :course="course" @saved="onSaved" @close="$emit('close')" />
   </BaseModal>
 </template>

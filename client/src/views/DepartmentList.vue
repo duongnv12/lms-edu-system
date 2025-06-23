@@ -1,5 +1,6 @@
 <template>
   <div class="p-6">
+    <BaseToast :show="toast.show" :message="toast.message" :type="toast.type" />
     <div class="flex justify-between items-center mb-6">
       <h2 class="text-2xl font-bold">Danh sách khoa</h2>
       <button class="btn btn-primary" @click="showAdd = true">Thêm khoa</button>
@@ -27,9 +28,9 @@
         </tbody>
       </table>
     </div>
-    <DepartmentAddModal :show="showAdd" @close="showAdd = false" @added="fetchDepartments" />
-    <DepartmentEditModal :show="showEdit" :department="selectedDepartment" @close="showEdit = false" @updated="fetchDepartments" />
-    <DepartmentDeleteModal :show="showDelete" :department="selectedDepartment" @close="showDelete = false" @deleted="fetchDepartments" />
+    <DepartmentAddModal :show="showAdd" @close="showAdd = false" @added="onAdded" />
+    <DepartmentEditModal :show="showEdit" :department="selectedDepartment" @close="showEdit = false" @updated="onUpdated" />
+    <DepartmentDeleteModal :show="showDelete" :department="selectedDepartment" @close="showDelete = false" @deleted="onDeleted" />
     <DepartmentDetailModal :show="showDetail" :department="selectedDepartment" @close="showDetail = false" />
   </div>
 </template>
@@ -41,12 +42,14 @@ import DepartmentAddModal from '@/components/DepartmentAddModal.vue';
 import DepartmentEditModal from '@/components/DepartmentEditModal.vue';
 import DepartmentDeleteModal from '@/components/DepartmentDeleteModal.vue';
 import DepartmentDetailModal from '@/components/DepartmentDetailModal.vue';
+import BaseToast from '@/components/BaseToast.vue';
 
 const showAdd = ref(false);
 const showEdit = ref(false);
 const showDelete = ref(false);
 const showDetail = ref(false);
 const selectedDepartment = ref(null);
+const toast = ref({ show: false, message: '', type: 'info' });
 
 const departmentStore = useDepartmentStore();
 const { departments, loading, fetchDepartments } = departmentStore;
@@ -66,6 +69,25 @@ function editDepartment(dept) {
 function deleteDepartment(dept) {
   selectedDepartment.value = dept;
   showDelete.value = true;
+}
+function showToast(message, type = 'info') {
+  toast.value = { show: true, message, type };
+  setTimeout(() => (toast.value.show = false), 3000);
+}
+function onAdded() {
+  fetchDepartments();
+  showToast('Thêm khoa thành công!', 'success');
+  showAdd.value = false;
+}
+function onUpdated() {
+  fetchDepartments();
+  showToast('Cập nhật khoa thành công!', 'success');
+  showEdit.value = false;
+}
+function onDeleted() {
+  fetchDepartments();
+  showToast('Đã xóa khoa!', 'success');
+  showDelete.value = false;
 }
 </script>
 

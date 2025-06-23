@@ -1,63 +1,67 @@
 <template>
-  <BaseModal :show="show" @close="$emit('close')" :title="course ? 'Cập nhật học phần' : 'Thêm học phần mới'" customClass="max-w-xl">
-    <form @submit.prevent="onSubmit" class="bg-white p-6 rounded shadow-md max-w-xl mx-auto mt-2">
-      <div class="mb-3 flex flex-row gap-4">
+  <BaseModal :show="show" @close="$emit('close')" :title="course ? 'Cập nhật học phần' : 'Thêm học phần mới'" customClass="max-w-xl rounded-2xl shadow-2xl overflow-y-auto">
+    <form @submit.prevent="onSubmit" class="bg-white p-8 rounded-2xl shadow-xl overflow-y-auto" style="max-height:80vh;">
+      <div class="mb-4 flex flex-row gap-6">
         <div class="w-1/2">
-          <label class="block font-semibold mb-1">Mã học phần</label>
+          <label class="block font-semibold mb-2 text-blue-700">Mã học phần</label>
           <input v-model="form.course_code" :disabled="!!course" class="input" required />
-          <div v-if="errors.course_code" class="text-red-500 text-sm">{{ errors.course_code }}</div>
+          <div v-if="errors.course_code" class="text-red-500 text-xs mt-1">{{ errors.course_code }}</div>
         </div>
         <div class="w-1/2">
-          <label class="block font-semibold mb-1">Tên học phần</label>
+          <label class="block font-semibold mb-2 text-blue-700">Tên học phần</label>
           <input v-model="form.course_name" class="input" required />
-          <div v-if="errors.course_name" class="text-red-500 text-sm">{{ errors.course_name }}</div>
+          <div v-if="errors.course_name" class="text-red-500 text-xs mt-1">{{ errors.course_name }}</div>
         </div>
       </div>
-      <div class="mb-3 flex flex-row gap-4">
+      <div class="mb-4 flex flex-row gap-6">
         <div class="w-1/2">
-          <label class="block font-semibold mb-1">Số tín chỉ</label>
+          <label class="block font-semibold mb-2 text-blue-700">Số tín chỉ</label>
           <input v-model.number="form.credits" type="number" min="1" class="input" required />
-          <div v-if="errors.credits" class="text-red-500 text-sm">{{ errors.credits }}</div>
+          <div v-if="errors.credits" class="text-red-500 text-xs mt-1">{{ errors.credits }}</div>
         </div>
         <div class="w-1/2">
-          <label class="block font-semibold mb-1">Loại học phần</label>
+          <label class="block font-semibold mb-2 text-blue-700">Loại học phần</label>
           <input v-model="form.course_type" class="input" />
         </div>
       </div>
-      <div class="mb-3 flex flex-row gap-4">
+      <div class="mb-4 flex flex-row gap-6">
         <div class="w-1/2">
-          <label class="block font-semibold mb-1">Học kỳ áp dụng</label>
+          <label class="block font-semibold mb-2 text-blue-700">Học kỳ áp dụng</label>
           <input v-model="form.semester_applicable" class="input" />
         </div>
         <div class="w-1/2">
-          <label class="block font-semibold mb-1">Khoa</label>
+          <label class="block font-semibold mb-2 text-blue-700">Khoa</label>
           <select v-model.number="form.department_id" class="input" required>
             <option v-for="dept in departments" :key="dept.department_id" :value="dept.department_id">{{ dept.dept_name }}</option>
           </select>
-          <div v-if="errors.department_id" class="text-red-500 text-sm">{{ errors.department_id }}</div>
+          <div v-if="errors.department_id" class="text-red-500 text-xs mt-1">{{ errors.department_id }}</div>
         </div>
       </div>
-      <div class="mb-3 flex flex-row gap-4">
+      <div class="mb-4 flex flex-row gap-6">
         <div class="w-1/2">
-          <label class="block font-semibold mb-1">Tiên quyết</label>
+          <label class="block font-semibold mb-2 text-blue-700">Tiên quyết</label>
           <select v-model="form.prerequisite_ids" class="input custom-scroll-select" multiple>
             <option v-for="c in courses" :key="c.course_id" :value="c.course_id">{{ c.course_name }}</option>
           </select>
         </div>
         <div class="w-1/2">
-          <label class="block font-semibold mb-1">Học phần học trước</label>
+          <label class="block font-semibold mb-2 text-blue-700">Học phần học trước</label>
           <select v-model="form.prior_ids" class="input custom-scroll-select" multiple>
             <option v-for="c in courses" :key="c.course_id" :value="c.course_id">{{ c.course_name }}</option>
           </select>
         </div>
       </div>
-      <div class="mb-3">
-        <label class="block font-semibold mb-1">Mô tả</label>
-        <textarea v-model="form.description" class="input"></textarea>
+      <div class="mb-4">
+        <label class="block font-semibold mb-2 text-blue-700">Mô tả</label>
+        <textarea v-model="form.description" class="input" rows="1"></textarea>
       </div>
-      <div class="flex space-x-2 mt-4">
-        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Lưu</button>
-        <button type="button" @click="$emit('close')" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded">Hủy</button>
+      <div class="flex space-x-3 mt-6 justify-end">
+        <button type="submit" class="flex items-center gap-1 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg shadow font-semibold transition-all">
+          <span class="material-icons text-base">save</span>Lưu
+        </button>
+        <button type="button" @click="$emit('close')" class="flex items-center gap-1 bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-2 rounded-lg shadow font-semibold transition-all">
+          <span class="material-icons text-base">close</span>Hủy
+        </button>
       </div>
     </form>
   </BaseModal>
@@ -156,12 +160,11 @@ const onSubmit = async () => {
 
 <style scoped>
 .input {
-  @apply w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-200;
+  @apply w-full border border-blue-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300 bg-gray-50 transition-all;
 }
 .custom-scroll-select {
   height: 8rem;
   overflow-y: auto;
-  /* For Firefox */
   scrollbar-width: thin;
   scrollbar-color: #a0aec0 #edf2f7;
 }
