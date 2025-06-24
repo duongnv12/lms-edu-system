@@ -54,7 +54,6 @@ const authorize = (allowedRoles = []) => {
         if (hasPermission) {
             next(); // Cho phép tiếp tục
         } else {
-            console.warn(`[AUTH_MIDDLEWARE_WARN] Authorization denied. User roles ${userRoles.join(', ')} do not match required roles ${allowedRoles.join(', ')}.`);
             res.status(403).json({ message: 'Forbidden. You do not have the required permissions.' });
         }
     };

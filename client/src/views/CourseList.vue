@@ -1,7 +1,7 @@
 <template>
   <div class="w-full">
     <BaseToast :show="toast.show" :message="toast.message" :type="toast.type" />
-    <div class="bg-white rounded-2xl shadow-2xl p-4 sm:p-8 md:p-12 mb-10 max-w-full xl:max-w-[1400px] 2xl:max-w-[1700px] mx-auto">
+    <div class="bg-white rounded-lg shadow-xl p-8 sm:p-10 md:p-12 mb-8">
       <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8 border-b-2 border-blue-100 pb-3 gap-4">
         <div class="flex items-center gap-3">
           <span class="material-icons text-4xl text-blue-500 bg-blue-100 rounded-full p-2 shadow">menu_book</span>

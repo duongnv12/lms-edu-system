@@ -1,7 +1,7 @@
 <template>
   <div class="w-full">
     <BaseToast :show="toast.show" :message="toast.message" :type="toast.type" />
-    <div class="bg-white rounded-2xl shadow-2xl p-4 sm:p-8 md:p-12 mb-10 max-w-full xl:max-w-[1200px] 2xl:max-w-[1500px] mx-auto">
+    <div class="bg-white rounded-lg shadow-xl p-8 sm:p-10 md:p-12 mb-8">
       <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8 border-b-2 border-blue-100 pb-3 gap-4">
         <div class="flex items-center gap-3">
           <span class="material-icons text-4xl text-blue-500 bg-blue-100 rounded-full p-2 shadow">apartment</span>
@@ -9,10 +9,10 @@
         </div>
         <div class="flex flex-col sm:flex-row gap-2 items-center">
           <input v-model="search" type="text" placeholder="Tìm kiếm mã hoặc tên khoa..." class="px-4 py-2 rounded-lg border border-blue-200 focus:ring-2 focus:ring-blue-400 focus:border-blue-500 shadow-sm transition-all w-64" />
-          <button class="bg-blue-500 hover:bg-blue-700 text-white px-6 py-2 rounded-lg shadow flex items-center font-semibold transition-all" @click="showAdd = true">
+          <button v-if="canEdit" class="bg-blue-500 hover:bg-blue-700 text-white px-6 py-2 rounded-lg shadow flex items-center font-semibold transition-all" @click="showAdd = true">
             <span class="material-icons mr-1">add_circle</span> Thêm khoa
           </button>
-          <button class="bg-green-500 hover:bg-green-700 text-white px-6 py-2 rounded-lg shadow flex items-center font-semibold transition-all" @click="showImport = true">
+          <button v-if="canEdit" class="bg-green-500 hover:bg-green-700 text-white px-6 py-2 rounded-lg shadow flex items-center font-semibold transition-all" @click="showImport = true">
             <span class="material-icons mr-1">upload</span> Nhập Excel
           </button>
         </div>
@@ -43,10 +43,10 @@
                   <button class="px-3 py-1 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-700 font-semibold flex items-center gap-1 shadow-sm transition-all" @click="selectDepartment(dept)">
                     <span class="material-icons">info</span> Chi tiết
                   </button>
-                  <button class="px-3 py-1 rounded-lg bg-yellow-100 hover:bg-yellow-200 text-yellow-800 font-semibold flex items-center gap-1 shadow-sm transition-all" @click="editDepartment(dept)">
+                  <button v-if="canEdit" class="px-3 py-1 rounded-lg bg-yellow-100 hover:bg-yellow-200 text-yellow-800 font-semibold flex items-center gap-1 shadow-sm transition-all" @click="editDepartment(dept)">
                     <span class="material-icons">edit</span> Sửa
                   </button>
-                  <button class="px-3 py-1 rounded-lg bg-red-100 hover:bg-red-200 text-red-700 font-semibold flex items-center gap-1 shadow-sm transition-all" @click="deleteDepartment(dept)">
+                  <button v-if="canDelete" class="px-3 py-1 rounded-lg bg-red-100 hover:bg-red-200 text-red-700 font-semibold flex items-center gap-1 shadow-sm transition-all" @click="deleteDepartment(dept)">
                     <span class="material-icons">delete</span> Xóa
                   </button>
                 </td>
@@ -60,6 +60,7 @@
       <DepartmentDeleteModal :show="showDelete" :department="selectedDepartment" @close="showDelete = false" @deleted="onDeleted" />
       <DepartmentDetailModal :show="showDetail" :department="selectedDepartment" @close="showDetail = false" />
       <DepartmentImportExcelModal :show="showImport" @close="showImport = false" @imported="onImported" />
+      <div v-if="!canEdit" class="text-gray-400 text-sm mt-4">Bạn không có quyền chỉnh sửa khoa.</div>
     </div>
   </div>
 </template>
@@ -73,6 +74,7 @@ import DepartmentDeleteModal from '@/components/DepartmentDeleteModal.vue';
 import DepartmentDetailModal from '@/components/DepartmentDetailModal.vue';
 import DepartmentImportExcelModal from '@/components/DepartmentImportExcelModal.vue';
 import BaseToast from '@/components/BaseToast.vue';
+import { useAuthStore } from '@/stores/authStore';
 
 const showAdd = ref(false);
 const showEdit = ref(false);
@@ -85,6 +87,10 @@ const toast = ref({ show: false, message: '', type: 'info' });
 const departments = ref([]);
 const loading = ref(false);
 const search = ref('');
+
+const authStore = useAuthStore();
+const canEdit = computed(() => authStore.userRoles.includes('Admin') || authStore.userRoles.includes('Instructor'));
+const canDelete = computed(() => authStore.userRoles.includes('Admin'));
 
 const filteredDepartments = computed(() => {
   if (!search.value) return departments.value;
