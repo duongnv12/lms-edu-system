@@ -12,25 +12,25 @@ const router = createRouter({
             path: '/',
             name: 'home',
             component: Home,
-            meta: { requiresAuth: true } // Đánh dấu route này cần xác thực
+            meta: { requiresAuth: true } 
         },
         {
             path: '/login',
             name: 'login',
             component: Login,
-            meta: { requiresAuth: false } // Đánh dấu route này không cần xác thực
+            meta: { requiresAuth: false } 
         },
         {
             path: '/profile',
             name: 'profile',
             component: Profile,
-            meta: { requiresAuth: true } // Đánh dấu route này cần xác thực
+            meta: { requiresAuth: true } 
         },
         {
-            path: '/auth/callback', // Đường dẫn mà Google sẽ redirect về frontend
+            path: '/auth/callback', 
             name: 'auth-callback',
             component: AuthCallback,
-            meta: { requiresAuth: false } // Route này xử lý callback, không cần xác thực trước
+            meta: { requiresAuth: false } 
         },
         {
             path: '/about',
@@ -51,7 +51,7 @@ const router = createRouter({
             path: '/courses',
             name: 'courses',
             component: () => import('@/views/CourseList.vue'),
-            meta: { requiresAuth: true } // Đánh dấu route này cần xác thực
+            meta: { requiresAuth: true } 
         },
         {
             path: '/departments',

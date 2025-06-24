@@ -49,23 +49,23 @@ onUnmounted(() => {
       </RouterLink>
 
       <nav>
-        <ul class="flex space-x-5 items-center">
+        <ul class="flex space-x-3 items-center">
           <li>
-            <RouterLink to="/" class="header-nav-link text-base">Trang chủ</RouterLink>
+            <RouterLink to="/" class="nav-box" active-class="nav-box-active">Trang chủ</RouterLink>
           </li>
           <li>
-            <RouterLink to="/courses" class="header-nav-link text-base">Học phần</RouterLink>
+            <RouterLink to="/courses" class="nav-box" active-class="nav-box-active">Học phần</RouterLink>
           </li>
           <li>
-            <RouterLink to="/departments" class="header-nav-link text-base">Khoa</RouterLink>
+            <RouterLink to="/departments" class="nav-box" active-class="nav-box-active">Khoa</RouterLink>
           </li>
 
           <li v-if="isLoggedIn" class="relative group">
-            <button class="flex items-center space-x-2 text-base font-medium text-gray-700 hover:text-blue-600 focus:outline-none py-2 px-3 rounded-lg transition-colors duration-200 group-hover:bg-gray-100">
-              <svg class="h-5 w-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+            <button class="user-box flex items-center space-x-2 text-base font-medium focus:outline-none py-2 px-3 rounded-lg transition-colors duration-200 border border-orange-200 bg-orange-50 text-orange-800 shadow-sm">
+              <svg class="h-5 w-5 text-orange-600" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
               </svg>
-              <span>{{ userFullName }}</span>
+              <span class="font-semibold">{{ userFullName }}</span>
               <svg class="h-4 w-4 ml-1 transition-transform duration-200 group-hover:rotate-180" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
               </svg>
@@ -89,9 +89,7 @@ onUnmounted(() => {
             </ul>
           </li>
           <li v-else>
-            <RouterLink to="/login" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition-all duration-300 transform hover:scale-105 text-base">
-              Đăng nhập
-            </RouterLink>
+            <RouterLink to="/login" class="nav-box bg-blue-600 hover:bg-blue-700 text-white font-semibold">Đăng nhập</RouterLink>
           </li>
         </ul>
       </nav>
@@ -115,25 +113,23 @@ onUnmounted(() => {
   animation: fade-in-down 0.2s ease-out forwards;
 }
 
-.header-nav-link {
-  @apply text-base font-medium text-gray-700 relative pb-1;
-  transition: color 0.2s ease-in-out;
+.nav-box {
+  @apply px-5 py-2 rounded-xl font-semibold text-base transition-all duration-200 bg-white border border-orange-200 shadow text-orange-800 hover:bg-orange-50 hover:text-orange-700 hover:shadow-md;
+  position: relative;
 }
 
-.header-nav-link::after {
-  content: '';
-  @apply absolute bottom-0 left-0 w-0 h-[2px] bg-blue-600 transition-all duration-300 ease-in-out;
+.nav-box-active,
+.nav-box.router-link-active {
+  @apply bg-gradient-to-r from-orange-400 to-orange-600 text-white border-orange-600 shadow-lg font-bold;
 }
 
-.header-nav-link:hover::after {
-  @apply w-full;
+.user-box {
+  @apply px-5 py-2 rounded-xl font-semibold text-base border border-orange-300 bg-orange-100 text-orange-900 shadow cursor-pointer transition-all duration-200;
+  box-shadow: 0 2px 8px 0 rgba(251, 146, 60, 0.10);
 }
 
-.header-nav-link.router-link-active {
-  @apply text-blue-600;
-}
-
-.header-nav-link.router-link-active::after {
-  @apply w-full bg-blue-600;
+.user-box:hover,
+.user-box:focus {
+  @apply bg-orange-200 text-orange-900 shadow-lg border-orange-400;
 }
 </style>

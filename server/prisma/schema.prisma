@@ -85,12 +85,13 @@ model Student {
 // --- Instructor Model ---
 model Department {
   department_id Int          @id @default(autoincrement())
-  dept_name     String       @unique @db.VarChar(100)
-  description   String?      @db.Text
-  created_at    DateTime     @default(now())
-  updated_at    DateTime     @updatedAt
-  instructors   Instructor[] // Thêm trường này: Một Department có nhiều Instructor
-  courses       Course[]     // Thêm trường này: Một Department có nhiều Course
+  code         String       @unique @db.VarChar(20) // Mã khoa thực tế, nhập thủ công
+  dept_name    String       @unique @db.VarChar(100)
+  description  String?      @db.Text
+  created_at   DateTime     @default(now())
+  updated_at   DateTime     @updatedAt
+  instructors  Instructor[] // Thêm trường này: Một Department có nhiều Instructor
+  courses      Course[]     // Thêm trường này: Một Department có nhiều Course
 }
 
 model Instructor {

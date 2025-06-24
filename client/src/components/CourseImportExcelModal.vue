@@ -1,61 +1,80 @@
 <template>
-  <BaseModal :show="show" @close="$emit('close')" title="Import học phần từ Excel" customClass="max-w-xl rounded-2xl shadow-2xl overflow-y-auto">
-    <div class="space-y-8 p-6 bg-white rounded-2xl">
-      <div class="flex flex-col sm:flex-row items-center gap-4">
-        <label class="w-full flex flex-col cursor-pointer">
-          <span class="text-base font-semibold text-blue-700 mb-2">Chọn file Excel</span>
-          <input type="file" accept=".xlsx,.xls" @change="handleFileChange" class="block w-full text-base file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-base file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition" />
-        </label>
-        <a
-          href="/course_import_template.xlsx"
-          download
-          class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg shadow font-semibold transition min-w-[180px] justify-center"
-          title="Tải file mẫu Excel để nhập học phần"
-        >
-          <span class="material-icons text-base">download</span>
-          File mẫu
-        </a>
+  <BaseModal :show="show" @close="$emit('close')" title="Nhập danh sách học phần từ Excel" customClass="max-w-lg">
+    <form @submit.prevent="submitImport" class="p-4">
+      <div class="mb-4">
+        <label class="block font-semibold mb-2 text-blue-700">Chọn file Excel (.xlsx)</label>
+        <div class="flex items-center gap-3 flex-wrap">
+          <label class="flex items-center px-4 py-2 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg shadow cursor-pointer transition-all border border-blue-300">
+            <span class="material-icons mr-2">upload_file</span>
+            <span>Chọn file</span>
+            <input type="file" accept=".xlsx,.xls" @change="handleFileChange" class="hidden" />
+          </label>
+          <a href="/course_import_template.xlsx" download class="flex items-center gap-1 px-4 py-2 bg-green-100 hover:bg-green-200 text-green-700 rounded-lg shadow border border-green-300 transition-all text-sm font-semibold">
+            <span class="material-icons text-base align-middle">download</span> Tải file mẫu
+          </a>
+          <span v-if="file" class="text-sm text-blue-700 font-semibold truncate max-w-[200px]">{{ file.name }}</span>
+        </div>
       </div>
-      <div v-if="preview.length" class="overflow-x-auto max-h-72 border rounded-xl bg-white shadow-inner">
-        <table class="min-w-full text-base">
+      <div class="mb-4 bg-blue-50 rounded-lg p-3">
+        <div class="font-semibold mb-2 text-blue-700">Dữ liệu mẫu:</div>
+        <table class="w-full text-sm border">
           <thead>
-            <tr>
-              <th v-for="(col, idx) in preview[0]" :key="'col'+idx" class="px-4 py-3 border-b bg-blue-100 text-blue-800 font-bold text-center">{{ col }}</th>
+            <tr class="text-blue-800">
+              <th class="px-2 py-1 border">Mã học phần</th>
+              <th class="px-2 py-1 border">Tên học phần</th>
+              <th class="px-2 py-1 border">Số tín chỉ</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(row, idx) in preview.slice(1)" :key="'row'+idx" :class="errors[idx] ? 'bg-red-50/70' : 'hover:bg-gray-50'">
-              <td v-for="(cell, cidx) in row" :key="'cell'+cidx"
-                  :class="['px-4 py-2 border-b text-center', errors[idx] && errors[idx][cidx] ? 'bg-red-200/80 text-red-700 font-semibold relative' : '']"
-                  :title="errors[idx] && errors[idx][cidx] ? errors[idx][cidx] : ''">
-                <span v-if="errors[idx] && errors[idx][cidx]">
-                  <span class="material-icons text-xs align-middle mr-1">error_outline</span>
-                  {{ cell }}
-                  <span class="absolute left-1/2 -translate-x-1/2 mt-1 text-xs text-red-600" v-if="errors[idx][cidx]">{{ errors[idx][cidx] }}</span>
-                </span>
-                <span v-else>{{ cell }}</span>
-              </td>
+            <tr>
+              <td class="px-2 py-1 border">INT101</td>
+              <td class="px-2 py-1 border">Nhập môn CNTT</td>
+              <td class="px-2 py-1 border">3</td>
+            </tr>
+            <tr>
+              <td class="px-2 py-1 border">MAT201</td>
+              <td class="px-2 py-1 border">Toán rời rạc</td>
+              <td class="px-2 py-1 border">2</td>
             </tr>
           </tbody>
         </table>
       </div>
-      <div v-if="preview.length" class="flex items-center gap-2">
-        <span v-if="errors.some(e => e)" class="text-red-600 text-sm flex items-center gap-1"><span class="material-icons text-base">error</span>Có lỗi trong dữ liệu, vui lòng kiểm tra lại!</span>
-        <span v-else-if="confirmed" class="text-green-700 text-sm flex items-center gap-1"><span class="material-icons text-base">check_circle</span>Dữ liệu đã được xác nhận!</span>
+      <div v-if="preview.length > 1" class="mb-4 bg-green-50 rounded-lg p-3 max-h-40 overflow-y-auto">
+        <div class="font-semibold mb-2 text-green-700">Xem trước dữ liệu bạn sẽ nhập:</div>
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="text-green-800">
+              <th class="px-2 py-1">Mã học phần</th>
+              <th class="px-2 py-1">Tên học phần</th>
+              <th class="px-2 py-1">Số tín chỉ</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(row, i) in preview.slice(1)" :key="i">
+              <td class="px-2 py-1" :class="errors[i] && errors[i][0] ? 'bg-red-200/80 text-red-700 font-semibold' : ''" :title="errors[i] && errors[i][0] ? errors[i][0] : ''">{{ row[0] }}</td>
+              <td class="px-2 py-1" :class="errors[i] && errors[i][1] ? 'bg-red-200/80 text-red-700 font-semibold' : ''" :title="errors[i] && errors[i][1] ? errors[i][1] : ''">{{ row[1] }}</td>
+              <td class="px-2 py-1" :class="errors[i] && errors[i][2] ? 'bg-red-200/80 text-red-700 font-semibold' : ''" :title="errors[i] && errors[i][2] ? errors[i][2] : ''">{{ row[2] }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="flex items-center mt-2">
+          <input type="checkbox" id="confirm" v-model="confirmed" class="mr-2" :disabled="errors.some(e => e)" />
+          <label for="confirm" class="text-sm text-gray-700">Tôi xác nhận dữ liệu xem trước là đúng và muốn nhập vào hệ thống</label>
+        </div>
+        <div v-if="errors.some(e => e)" class="text-red-600 text-sm flex items-center gap-1 mt-1"><span class="material-icons text-base">error</span>Có lỗi trong dữ liệu, vui lòng kiểm tra lại!</div>
+        <div v-else-if="confirmed" class="text-green-700 text-sm flex items-center gap-1 mt-1"><span class="material-icons text-base">check_circle</span>Dữ liệu đã được xác nhận!</div>
       </div>
-      <div class="flex justify-end gap-3 pt-2">
-        <button @click="$emit('close')" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-2 rounded-lg shadow-sm font-semibold transition text-base">Hủy</button>
-        <button v-if="preview.length && !confirmed" :disabled="errors.some(e => e)" @click="confirmPreview" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg shadow font-semibold flex items-center gap-2 disabled:opacity-50 transition text-base">
-          <span class="material-icons text-base">task_alt</span>
-          Xác nhận dữ liệu
+      <div v-if="error" class="text-red-600 text-sm mb-2">{{ error }}</div>
+      <div v-if="success" class="text-green-600 text-sm mb-2">{{ success }}</div>
+      <div class="flex justify-end gap-2 mt-4">
+        <button type="submit" class="px-5 py-2 rounded-lg bg-blue-500 hover:bg-blue-700 text-white font-semibold flex items-center gap-1 shadow transition-all" :disabled="loading || !file || (preview.length > 1 && (!confirmed || errors.some(e => e)))">
+          <span class="material-icons">upload</span> Nhập dữ liệu
         </button>
-        <button v-if="confirmed" :disabled="!file || loading || errors.some(e => e)" @click="submitImport" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg shadow font-semibold flex items-center gap-2 disabled:opacity-50 transition text-base">
-          <span v-if="loading" class="animate-spin material-icons mr-2">autorenew</span>
-          <span v-else class="material-icons text-base">cloud_upload</span>
-          Import
+        <button type="button" class="px-5 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold flex items-center gap-1 shadow transition-all" @click="$emit('close')" :disabled="loading">
+          <span class="material-icons">close</span> Hủy
         </button>
       </div>
-    </div>
+    </form>
   </BaseModal>
 </template>
 
@@ -65,27 +84,28 @@ import BaseModal from './BaseModal.vue';
 import * as XLSX from 'xlsx';
 import api from '../services/api';
 
-const props = defineProps({
-  show: Boolean
-});
+const props = defineProps({ show: Boolean });
 const emit = defineEmits(['close', 'imported', 'toast']);
-
 const file = ref(null);
 const preview = ref([]);
 const loading = ref(false);
 const errors = ref([]);
 const confirmed = ref(false);
+const error = ref('');
+const success = ref('');
 
-function validateRow(row, idx) {
+function validateRow(row) {
   const rowErrors = {};
   if (!row[0] || typeof row[0] !== 'string') rowErrors[0] = 'Thiếu mã học phần';
   if (!row[1] || typeof row[1] !== 'string') rowErrors[1] = 'Thiếu tên học phần';
   if (row[2] === undefined || isNaN(Number(row[2]))) rowErrors[2] = 'Số tín chỉ không hợp lệ';
-  // Có thể bổ sung validate cho các cột khác nếu cần
   return Object.keys(rowErrors).length ? rowErrors : null;
 }
 
 function handleFileChange(e) {
+  error.value = '';
+  success.value = '';
+  confirmed.value = false;
   const f = e.target.files[0];
   if (!f) return;
   file.value = f;
@@ -96,28 +116,31 @@ function handleFileChange(e) {
     const sheet = workbook.Sheets[workbook.SheetNames[0]];
     const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
     preview.value = rows;
-    // Validate từng dòng (bỏ header)
     errors.value = rows.slice(1).map(validateRow);
     confirmed.value = false;
   };
   reader.readAsArrayBuffer(f);
 }
 
-function confirmPreview() {
-  confirmed.value = true;
-}
-
 async function submitImport() {
-  if (!file.value || !confirmed.value || errors.value.some(e => e)) return;
+  error.value = '';
+  success.value = '';
+  if (!file.value) return;
+  if (preview.value.length > 1 && (!confirmed.value || errors.value.some(e => e))) {
+    error.value = 'Bạn cần xác nhận dữ liệu trước khi nhập.';
+    return;
+  }
   loading.value = true;
   try {
     const formData = new FormData();
     formData.append('file', file.value);
     await api.post('/courses/import-excel', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+    success.value = 'Nhập dữ liệu thành công!';
     emit('toast', { message: 'Import thành công!', type: 'success' });
     emit('imported');
-    emit('close');
+    setTimeout(() => emit('close'), 1200);
   } catch (e) {
+    error.value = e.response?.data?.message || 'Import thất bại!';
     emit('toast', { message: 'Import thất bại!', type: 'error' });
   } finally {
     loading.value = false;
@@ -130,6 +153,13 @@ watch(() => props.show, (val) => {
     preview.value = [];
     loading.value = false;
     confirmed.value = false;
+    error.value = '';
+    success.value = '';
+    errors.value = [];
   }
 });
 </script>
+
+<style scoped>
+.material-icons { font-family: 'Material Icons'; font-style: normal; font-weight: normal; font-size: 20px; line-height: 1; letter-spacing: normal; text-transform: none; display: inline-block; direction: ltr; font-feature-settings: 'liga'; -webkit-font-feature-settings: 'liga'; -webkit-font-smoothing: antialiased; }
+</style>

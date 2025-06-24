@@ -72,6 +72,7 @@ CREATE TABLE "Student" (
 -- CreateTable
 CREATE TABLE "Department" (
     "department_id" SERIAL NOT NULL,
+    "code" VARCHAR(20) NOT NULL,
     "dept_name" VARCHAR(100) NOT NULL,
     "description" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -248,6 +249,9 @@ CREATE UNIQUE INDEX "Major_major_name_key" ON "Major"("major_name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Student_student_code_key" ON "Student"("student_code");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Department_code_key" ON "Department"("code");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Department_dept_name_key" ON "Department"("dept_name");

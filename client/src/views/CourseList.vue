@@ -9,11 +9,11 @@
         </div>
         <div class="flex gap-2 flex-wrap">
           <input v-model="search" type="text" placeholder="Tìm kiếm mã hoặc tên học phần..." class="border border-blue-200 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300 text-base w-64 shadow-sm" />
-          <button v-if="canEdit" @click="openImportModal" class="bg-green-100 hover:bg-green-200 text-green-800 px-4 py-2 rounded-lg shadow flex items-center font-semibold transition-all">
-            <span class="material-icons mr-1">upload_file</span>Import Excel
-          </button>
           <button v-if="canEdit" @click="openAddModal" class="bg-blue-500 hover:bg-blue-700 text-white px-6 py-2 rounded-lg shadow flex items-center font-semibold transition-all">
             <span class="material-icons mr-1">add_circle</span> Thêm học phần
+          </button>
+          <button v-if="canEdit" @click="openImportModal" class="bg-green-500 hover:bg-green-700 text-white px-6 py-2 rounded-lg shadow flex items-center font-semibold transition-all">
+            <span class="material-icons mr-1">upload</span> Nhập Excel
           </button>
         </div>
       </div>

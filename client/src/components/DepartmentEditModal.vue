@@ -1,36 +1,39 @@
 <template>
-  <BaseModal :show="show" @close="$emit('close')">
-    <template #header>Sửa thông tin khoa</template>
-    <form @submit.prevent="handleSubmit">
-      <div class="mb-4">
-        <label class="block mb-1">Tên khoa</label>
-        <input v-model="name" class="input input-bordered w-full" required />
-      </div>
-      <div class="flex justify-end">
-        <button type="submit" class="btn btn-primary">Lưu</button>
-      </div>
-    </form>
-  </BaseModal>
+  <DepartmentFormModal
+    :show="show"
+    mode="edit"
+    :department="department"
+    :loading="loading"
+    :error="error"
+    @close="$emit('close')"
+    @submit="handleSubmit"
+  />
 </template>
 
 <script setup>
-import BaseModal from './BaseModal.vue';
+import DepartmentFormModal from './DepartmentFormModal.vue';
+import apiClient from '@/services/api';
 import { ref, watch } from 'vue';
 const props = defineProps({ show: Boolean, department: Object });
 const emit = defineEmits(['close', 'updated']);
-const name = ref('');
+const error = ref('');
+const loading = ref(false);
 
-watch(() => props.department, (val) => {
-  name.value = val?.name || '';
-}, { immediate: true });
+watch(() => props.show, (val) => { if (val) error.value = ''; });
 
-const handleSubmit = () => {
-  // Gọi API cập nhật khoa
-  // await api.put(`/departments/${props.department.id}`, { name: name.value });
-  emit('updated');
-  emit('close');
+const handleSubmit = async (data) => {
+  error.value = '';
+  if (!props.department) return;
+  loading.value = true;
+  try {
+    const id = props.department.department_id || props.department.id;
+    await apiClient.put(`/departments/${id}`, data);
+    emit('updated');
+    emit('close');
+  } catch (err) {
+    error.value = err.response?.data?.message || 'Có lỗi xảy ra.';
+  } finally {
+    loading.value = false;
+  }
 };
 </script>
-
-<style scoped>
-</style>

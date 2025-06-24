@@ -28,6 +28,7 @@ async function main() {
     where: { dept_name: 'Khoa Công nghệ Thông tin' },
     update: {},
     create: {
+      code: 'CNTT', // Mã khoa thực tế
       dept_name: 'Khoa Công nghệ Thông tin',
       description: 'Khoa chuyên về các lĩnh vực công nghệ thông tin.',
     },
@@ -92,6 +93,59 @@ async function main() {
     console.log(`Upserted Admin user: ${adminUser.email}`);
   } else {
     console.error('Admin role not found. Cannot seed admin user.');
+  }
+
+  // Seed Instructor user
+  const instructorEmail = 'instructor@phenikaa-uni.edu.vn';
+  const instructorPassword = 'instructorpassword'; // Đổi mật khẩu mạnh hơn khi dùng thực tế
+  const hashedInstructorPassword = await bcrypt.hash(instructorPassword, 10);
+
+  const instructorRole = await prisma.role.findUnique({ where: { role_name: 'Instructor' } });
+
+  if (instructorRole && deptIT) {
+    // 1. Upsert user
+    const instructorUser = await prisma.user.upsert({
+      where: { email: instructorEmail },
+      update: { password_hash: hashedInstructorPassword },
+      create: {
+        username: 'instructor',
+        email: instructorEmail,
+        password_hash: hashedInstructorPassword,
+        full_name: 'Instructor User',
+      },
+    });
+
+    // 2. Đảm bảo user có role Instructor (UserRole)
+    await prisma.userRole.upsert({
+      where: {
+        user_id_role_id: {
+          user_id: instructorUser.user_id,
+          role_id: instructorRole.role_id,
+        },
+      },
+      update: {},
+      create: {
+        user_id: instructorUser.user_id,
+        role_id: instructorRole.role_id,
+      },
+    });
+
+    // 3. Upsert bảng Instructor
+    await prisma.instructor.upsert({
+      where: { instructor_id: instructorUser.user_id },
+      update: {},
+      create: {
+        instructor_id: instructorUser.user_id,
+        department_id: deptIT.department_id,
+        academic_rank: 'Lecturer',
+        office_location: 'A1-101',
+        phone_number: '0123456789',
+      },
+    });
+
+    console.log(`Upserted Instructor user: ${instructorUser.email}`);
+  } else {
+    console.error('Instructor role or department not found. Cannot seed instructor user.');
   }
 
   // Seed Courses
