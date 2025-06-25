@@ -12,58 +12,67 @@ const router = createRouter({
             path: '/',
             name: 'home',
             component: Home,
-            meta: { requiresAuth: true } 
+            meta: { requiresAuth: true, title: 'Trang chủ' }
         },
         {
             path: '/login',
             name: 'login',
             component: Login,
-            meta: { requiresAuth: false } 
+            meta: { requiresAuth: false, title: 'Đăng nhập' }
         },
         {
             path: '/profile',
             name: 'profile',
             component: Profile,
-            meta: { requiresAuth: true } 
+            meta: { requiresAuth: true, title: 'Hồ sơ cá nhân' }
         },
         {
-            path: '/auth/callback', 
+            path: '/auth/callback',
             name: 'auth-callback',
             component: AuthCallback,
-            meta: { requiresAuth: false } 
+            meta: { requiresAuth: false, title: 'Đang xác thực...' }
         },
         {
             path: '/about',
             name: 'about',
-            component: () => import('@/views/About.vue')
+            component: () => import('@/views/About.vue'),
+            meta: { title: 'Về chúng tôi' }
         },
         {
             path: '/contact',
             name: 'contact',
-            component: () => import('@/views/Contact.vue')
+            component: () => import('@/views/Contact.vue'),
+            meta: { title: 'Liên hệ' }
         },
         {
             path: '/privacy',
             name: 'privacy',
-            component: () => import('@/views/Privacy.vue')
+            component: () => import('@/views/Privacy.vue'),
+            meta: { title: 'Chính sách bảo mật' }
         },
         {
             path: '/courses',
-            name: 'courses',
+            name: 'CourseList',
             component: () => import('@/views/CourseList.vue'),
-            meta: { requiresAuth: true } 
+            meta: { requiresAuth: true, title: 'Quản lý Môn học' }
         },
         {
             path: '/departments',
             name: 'DepartmentList',
-            component: () => import('../views/DepartmentList.vue'),
-            meta: { requiresAuth: true },
+            component: () => import('@/views/DepartmentList.vue'),
+            meta: { requiresAuth: true, title: 'Quản lý Khoa' }
+        },
+        {
+            path: '/curriculums',
+            name: 'CurriculumList',
+            component: () => import('@/views/CurriculumList.vue'),
+            meta: { requiresAuth: true, title: 'Quản lý Chương trình Đào tạo' }
         },
         {
             path: '/admin',
             name: 'admin',
             component: () => import('@/views/Admin.vue'),
-            meta: { requiresAuth: true }
+            meta: { requiresAuth: true, title: 'Quản trị hệ thống' }
         },
     ]
 })
@@ -90,6 +99,12 @@ router.beforeEach((to, from, next) => {
         console.log(`[ROUTER_GUARD] Allowing navigation to ${to.path}.`);
         next();
     }
+});
+
+// Cập nhật title trang
+router.afterEach((to) => {
+    const defaultTitle = 'LMS Edu System';
+    document.title = to.meta.title ? `${to.meta.title} - ${defaultTitle}` : defaultTitle;
 });
 
 

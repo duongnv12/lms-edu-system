@@ -3,16 +3,47 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Line clamp utilities */
+@layer utilities {
+  .line-clamp-1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+  }
+
+  .line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+
+  .line-clamp-3 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+  }
+}
+
 /* Global styles */
-html, body, #app {
+html,
+body,
+#app {
   height: 100%;
   margin: 0;
   padding: 0;
   /* Đặt màu nền tổng thể cho ứng dụng ở đây */
-  background-color: #f8fafc; /* Một màu xám rất nhạt (bg-gray-50) */
+  background-color: #f8fafc;
+  /* Một màu xám rất nhạt (bg-gray-50) */
   /* Hoặc một gradient rất nhẹ nếu muốn */
   /* background: linear-gradient(to bottom right, #f0f4f8, #e2e8f0); */
-  font-family: 'Inter', sans-serif; /* Sử dụng font hiện đại hơn */
+  font-family: 'Inter', sans-serif;
+  /* Sử dụng font hiện đại hơn */
 }
 
 /* Base styles for scrollbars (optional, for a cleaner look) */
@@ -36,19 +67,29 @@ html, body, #app {
 
 /* Other general styles for your app */
 .animate-fade-in {
-    animation: fadeIn 0.5s ease-out forwards;
+  animation: fadeIn 0.5s ease-out forwards;
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 .animate-spin {
-    animation: spin 1s linear infinite;
+  animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }

@@ -226,6 +226,113 @@ async function main() {
     },
   });
 
+  // Seed Curriculum
+  const curriculum1 = await prisma.curriculum.upsert({
+    where: { curriculum_code: 'CNTT2024' },
+    update: {},
+    create: {
+      curriculum_code: 'CNTT2024',
+      curriculum_name: 'Cử nhân Công nghệ Thông tin',
+      description: 'Chương trình đào tạo Cử nhân Công nghệ Thông tin theo chuẩn quốc tế',
+      major_id: majorIT.major_id,
+      version: 'K2024',
+      academic_year: 2024,
+      total_credits: 140,
+      min_gpa: 2.5,
+      effective_date: new Date('2024-09-01'),
+      is_active: true,
+    },
+  });
+
+  // Seed CurriculumCourse - Gán môn học vào chương trình
+  const curriculumCourses = [
+    {
+      curriculum_id: curriculum1.curriculum_id,
+      course_id: course1.course_id,
+      semester_suggested: 1,
+      year_suggested: 1,
+      is_mandatory: true,
+      course_group: 'Cơ sở ngành',
+    },
+    {
+      curriculum_id: curriculum1.curriculum_id,
+      course_id: course2.course_id,
+      semester_suggested: 2,
+      year_suggested: 1,
+      is_mandatory: true,
+      course_group: 'Cơ sở ngành',
+    },
+    {
+      curriculum_id: curriculum1.curriculum_id,
+      course_id: course3.course_id,
+      semester_suggested: 1,
+      year_suggested: 2,
+      is_mandatory: true,
+      course_group: 'Chuyên ngành',
+    },
+    {
+      curriculum_id: curriculum1.curriculum_id,
+      course_id: course4.course_id,
+      semester_suggested: 2,
+      year_suggested: 2,
+      is_mandatory: true,
+      course_group: 'Chuyên ngành',
+    },
+  ];
+
+  for (const curriculumCourse of curriculumCourses) {
+    await prisma.curriculumCourse.upsert({
+      where: {
+        curriculum_id_course_id: {
+          curriculum_id: curriculumCourse.curriculum_id,
+          course_id: curriculumCourse.course_id,
+        },
+      },
+      update: {},
+      create: curriculumCourse,
+    });
+  }
+
+  // Seed CurriculumRequirement - Yêu cầu tốt nghiệp
+  const requirements = [
+    {
+      curriculum_id: curriculum1.curriculum_id,
+      requirement_type: 'MIN_CREDITS',
+      requirement_name: 'Tổng số tín chỉ tối thiểu',
+      description: 'Sinh viên phải tích lũy tối thiểu 140 tín chỉ để tốt nghiệp',
+      value: '140',
+    },
+    {
+      curriculum_id: curriculum1.curriculum_id,
+      requirement_type: 'MIN_GPA',
+      requirement_name: 'Điểm trung bình tích lũy tối thiểu',
+      description: 'GPA tối thiểu 2.5/4.0',
+      value: '2.5',
+    },
+    {
+      curriculum_id: curriculum1.curriculum_id,
+      requirement_type: 'MANDATORY_COURSES',
+      requirement_name: 'Hoàn thành tất cả môn học bắt buộc',
+      description: 'Phải hoàn thành tất cả các môn học bắt buộc trong chương trình',
+      value: 'ALL_MANDATORY',
+    },
+    {
+      curriculum_id: curriculum1.curriculum_id,
+      requirement_type: 'ELECTIVE_CREDITS',
+      requirement_name: 'Tín chỉ tự chọn tối thiểu',
+      description: 'Tối thiểu 30 tín chỉ từ các môn học tự chọn',
+      value: '30',
+    },
+  ];
+
+  for (const requirement of requirements) {
+    await prisma.curriculumRequirement.create({
+      data: requirement,
+    });
+  }
+
+  console.log(`Upserted curriculum: ${curriculum1.curriculum_name}`);
+
   console.log('Seeding finished.');
 }
 

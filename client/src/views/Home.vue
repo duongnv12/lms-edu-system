@@ -1,66 +1,188 @@
-<script setup>
-// Trang Home tổng quan, không cần fetch thông tin cá nhân nữa
-</script>
-
 <template>
-  <div class="w-full">
-    <div class="bg-white rounded-lg shadow-xl p-8 sm:p-10 md:p-12 mb-8">
-      <div class="flex flex-col items-center mb-10">
-        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135768.png" alt="LMS Logo" class="w-20 h-20 mb-4 drop-shadow-lg" />
-        <h1 class="text-5xl font-black text-blue-700 mb-4 tracking-tight text-center">
-          Chào mừng đến với Hệ thống LMS
-        </h1>
-        <p class="text-xl text-gray-700 mb-2 text-center max-w-2xl leading-relaxed">
-          Nền tảng quản lý học tập trực tuyến dành cho sinh viên, giảng viên và cán bộ quản lý của Trường Đại học Phenikaa.
-        </p>
-        <p class="text-base text-gray-500 text-center max-w-2xl">
-          Quản lý khóa học, theo dõi tiến độ, nhận thông báo quan trọng và nhiều tính năng hữu ích khác.
-        </p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mt-8">
-        <div class="flex flex-col items-center text-center bg-blue-50 rounded-xl p-6 shadow hover:scale-105 transition-transform duration-200">
-          <div class="bg-blue-100 rounded-full p-4 mb-4">
-            <!-- Book Icon -->
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m0 0c-2.21 0-4-1.79-4-4V6c0-2.21 1.79-4 4-4s4 1.79 4 4v8c0 2.21-1.79 4-4 4z"/>
-            </svg>
-          </div>
-          <h2 class="text-lg font-bold mb-2 text-blue-700">Quản lý khóa học</h2>
-          <p class="text-gray-600">Đăng ký, xem tài liệu, nộp bài tập và theo dõi tiến độ học tập của bạn một cách dễ dàng.</p>
-        </div>
-        <div class="flex flex-col items-center text-center bg-green-50 rounded-xl p-6 shadow hover:scale-105 transition-transform duration-200">
-          <div class="bg-green-100 rounded-full p-4 mb-4">
-            <!-- Bell Icon -->
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-green-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V4a2 2 0 10-4 0v1.341C7.67 7.165 6 9.388 6 12v2.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
-            </svg>
-          </div>
-          <h2 class="text-lg font-bold mb-2 text-green-700">Tương tác & thông báo</h2>
-          <p class="text-gray-600">Nhận thông báo mới nhất, trao đổi với giảng viên và bạn học qua diễn đàn, tin nhắn.</p>
-        </div>
-        <div class="flex flex-col items-center text-center bg-purple-50 rounded-xl p-6 shadow hover:scale-105 transition-transform duration-200">
-          <div class="bg-purple-100 rounded-full p-4 mb-4">
-            <!-- Shield Check Icon -->
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-purple-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4l7 4v4c0 5.25-3.5 9.74-7 12-3.5-2.26-7-6.75-7-12V8l7-4z"/>
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4"/>
-            </svg>
-          </div>
-          <h2 class="text-lg font-bold mb-2 text-purple-700">Bảo mật & hỗ trợ</h2>
-          <p class="text-gray-600">Thông tin cá nhân của bạn được bảo vệ an toàn. Đội ngũ hỗ trợ luôn sẵn sàng giải đáp mọi thắc mắc.</p>
+  <div class="min-h-screen bg-gray-50">
+    <!-- Hero Section -->
+    <div class="bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="text-center">
+          <img src="/logo.png" alt="LMS Logo" class="w-20 h-20 mx-auto mb-6 rounded-lg shadow-lg" />
+          <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            Chào mừng đến với
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+              LMS Edu System
+            </span>
+          </h1>
+          <p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+            Nền tảng quản lý học tập và chương trình đào tạo hiện đại, 
+            dành cho sinh viên, giảng viên và cán bộ quản lý giáo dục
+          </p>
         </div>
       </div>
+    </div>
 
-      <div class="mt-12 text-center">
-        <router-link to="/about" class="inline-block bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-3 px-10 rounded-full shadow-lg text-lg transition">
-          Tìm hiểu thêm về hệ thống
+    <!-- Quick Access Section -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">Truy cập nhanh</h2>
+        <p class="text-lg text-gray-600">Chọn module bạn muốn sử dụng</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Course Management -->
+        <router-link to="/courses" class="group block bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-blue-200">
+          <div class="p-8">
+            <div class="flex items-center justify-center w-16 h-16 bg-blue-100 rounded-lg mb-4 group-hover:bg-blue-200 transition-colors">
+              <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">Quản lý Môn học</h3>
+            <p class="text-gray-600 mb-4">Quản lý danh sách môn học, thông tin chi tiết và điều kiện tiên quyết</p>
+            <div class="text-blue-600 font-medium group-hover:text-blue-700">
+              Truy cập →
+            </div>
+          </div>
         </router-link>
+
+        <!-- Department Management -->
+        <router-link to="/departments" class="group block bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-green-200">
+          <div class="p-8">
+            <div class="flex items-center justify-center w-16 h-16 bg-green-100 rounded-lg mb-4 group-hover:bg-green-200 transition-colors">
+              <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2 group-hover:text-green-600 transition-colors">Quản lý Khoa</h3>
+            <p class="text-gray-600 mb-4">Quản lý thông tin các khoa, ngành và bộ môn trong trường</p>
+            <div class="text-green-600 font-medium group-hover:text-green-700">
+              Truy cập →
+            </div>
+          </div>
+        </router-link>
+
+        <!-- Curriculum Management -->
+        <router-link to="/curriculums" class="group block bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-purple-200">
+          <div class="p-8">
+            <div class="flex items-center justify-center w-16 h-16 bg-purple-100 rounded-lg mb-4 group-hover:bg-purple-200 transition-colors">
+              <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2 group-hover:text-purple-600 transition-colors">Chương trình Đào tạo</h3>
+            <p class="text-gray-600 mb-4">Thiết lập và quản lý khung chương trình đào tạo cho các ngành</p>
+            <div class="text-purple-600 font-medium group-hover:text-purple-700">
+              Truy cập →
+            </div>
+          </div>
+        </router-link>
+
+        <!-- Admin Panel -->
+        <router-link to="/admin" class="group block bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-orange-200" v-if="userRoles.includes('Admin')">
+          <div class="p-8">
+            <div class="flex items-center justify-center w-16 h-16 bg-orange-100 rounded-lg mb-4 group-hover:bg-orange-200 transition-colors">
+              <svg class="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2 group-hover:text-orange-600 transition-colors">Quản trị Hệ thống</h3>
+            <p class="text-gray-600 mb-4">Dashboard tổng quan và quản lý toàn bộ hệ thống</p>
+            <div class="text-orange-600 font-medium group-hover:text-orange-700">
+              Truy cập →
+            </div>
+          </div>
+        </router-link>
+
+        <!-- Profile -->
+        <router-link to="/profile" class="group block bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-indigo-200">
+          <div class="p-8">
+            <div class="flex items-center justify-center w-16 h-16 bg-indigo-100 rounded-lg mb-4 group-hover:bg-indigo-200 transition-colors">
+              <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2 group-hover:text-indigo-600 transition-colors">Hồ sơ cá nhân</h3>
+            <p class="text-gray-600 mb-4">Xem và cập nhật thông tin cá nhân của bạn</p>
+            <div class="text-indigo-600 font-medium group-hover:text-indigo-700">
+              Truy cập →
+            </div>
+          </div>
+        </router-link>
+
+        <!-- About -->
+        <router-link to="/about" class="group block bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-gray-200">
+          <div class="p-8">
+            <div class="flex items-center justify-center w-16 h-16 bg-gray-100 rounded-lg mb-4 group-hover:bg-gray-200 transition-colors">
+              <svg class="w-8 h-8 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2 group-hover:text-gray-600 transition-colors">Về hệ thống</h3>
+            <p class="text-gray-600 mb-4">Tìm hiểu thêm về LMS Edu System và các tính năng</p>
+            <div class="text-gray-600 font-medium group-hover:text-gray-700">
+              Tìm hiểu →
+            </div>
+          </div>
+        </router-link>
+      </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-bold text-gray-900 mb-4">Tính năng chính</h2>
+          <p class="text-lg text-gray-600">Những tính năng nổi bật của hệ thống</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="text-center">
+            <div class="flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mx-auto mb-4">
+              <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">Quản lý toàn diện</h3>
+            <p class="text-gray-600">Quản lý môn học, khoa và chương trình đào tạo một cách hiệu quả và tập trung</p>
+          </div>
+
+          <div class="text-center">
+            <div class="flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mx-auto mb-4">
+              <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">Hiệu suất cao</h3>
+            <p class="text-gray-600">Giao diện nhanh chóng, responsive và thân thiện với người dùng trên mọi thiết bị</p>
+          </div>
+
+          <div class="text-center">
+            <div class="flex items-center justify-center w-16 h-16 bg-purple-100 rounded-full mx-auto mb-4">
+              <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">Bảo mật cao</h3>
+            <p class="text-gray-600">Bảo vệ dữ liệu với hệ thống xác thực và phân quyền người dùng tiên tiến</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
-<style scoped>
-/* No extra styles needed, all handled by Tailwind */
-</style>
+<script>
+import { computed } from 'vue'
+import { useAuthStore } from '@/stores/authStore'
+
+export default {
+  name: 'Home',
+  setup() {
+    const authStore = useAuthStore()
+    const userRoles = computed(() => authStore.userRoles)
+
+    return {
+      userRoles
+    }
+  }
+}
+</script>

@@ -5,6 +5,7 @@ const cors = require('cors');
 const authRoutes = require('./routes/authRoutes');
 const courseRoutes = require('./routes/courseRoutes'); // Khai báo route cho Course API
 const departmentRoutes = require('./routes/departmentRoutes'); // Khai báo route cho Department API
+const curriculumRoutes = require('./routes/curriculumRoutes'); // Khai báo route cho Curriculum API
 
 // Load environment variables (đảm bảo nó được gọi ở đây hoặc server.js)
 require('dotenv').config();
@@ -28,6 +29,8 @@ app.use('/api/auth', authRoutes); // Các routes liên quan đến xác thực
 app.use('/api/courses', courseRoutes); // Các routes liên quan đến quản lý học phần
 
 app.use('/api/departments', departmentRoutes); // Các routes liên quan đến quản lý khoa
+
+app.use('/api/curriculums', curriculumRoutes); // Các routes liên quan đến quản lý chương trình đào tạo
 
 // Basic route for testing server status
 app.get('/', (req, res) => {
